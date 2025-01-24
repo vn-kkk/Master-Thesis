@@ -20,34 +20,31 @@ def model(time, m, c):
     return time * m + c
 
 
-# Now we define the injection parameters which we make simulated data with
-injection_parameters = dict(m=0.5, c=0.2)
+# Now we define the injection parameters with which we make simulated data.
+injection_parameters = dict(m=0.5, c=0.2) 
 
 # For this example, we'll inject standard Gaussian noise with a varaince of 1
 sigma = 1
 
 # These lines of code generate the fake data. 
-# Note the ** just unpacks the contents of the dictonary when calling the model function.
+# Note the ** just unpacks the contents of the dictonary 
+# when calling the model function.
 sampling_frequency = 10
 time_duration = 10
 time = np.arange(0, time_duration, 1 / sampling_frequency)
 N = len(time) # Number of samples
 data = model(time, **injection_parameters) + np.random.normal(0, sigma, N) 
-# Unknown background noise which spreads the data points around.
-plt.title('Random data with noise')
-plt.xlabel('time')
-plt.ylabel('data y')
-plt.plot(time, data, 'o', markersize=1)
+# now 'data' contains the signal mixed with some gausian noise.
 
 # We quickly plot the data to check it looks sensible
 fig, ax = plt.subplots()
-ax.plot(time, data, "og", label="data") # the data points
+ax.plot(time, data, "og", label="data") # the data points with noise
 ax.plot(time, model(time, **injection_parameters), "--r", label="signal") 
-# Line of Best fit
+# Line of Best fit which is the signal
 ax.set_xlabel("time")
 ax.set_ylabel("y")
 ax.legend()
-fig.suptitle("Signal that we want to fit to the data")
+fig.suptitle("Signal fitted to the data")
 fig.savefig("{}/{}_data.png".format(outdir, label))
 
 injection_parameters.update(dict(sigma=1))
@@ -75,5 +72,3 @@ result = bilby.run_sampler(
 
 # Finally plot a corner plot: all outputs are stored in outdir
 result.plot_corner()
-
-plt.show()

@@ -2,7 +2,7 @@
 """
 An example of how to use bilby to perform parameter estimation for
 non-gravitational wave data. In this case, fitting a linear function to
-data with background Gaussian noise
+data with background Gaussian noise of unknown variance
 
 """
 import bilby
@@ -20,7 +20,7 @@ def model(time, m, c):
     return time * m + c
 
 
-# Now we define the injection parameters which we make simulated data with
+# Now we define the injection parameters which are the "true" values we plug in.
 injection_parameters = dict(m=0.5, c=0.2)
 
 # For this example, we'll use standard Gaussian noise
@@ -29,15 +29,16 @@ injection_parameters = dict(m=0.5, c=0.2)
 # contents of the injection_parameters when calling the model function.
 sampling_frequency = 10 #in Hz. Number of samples per second 
 time_duration = 10
-time = np.arange(0, time_duration, 1 / sampling_frequency) # np.arrange(start, stop, step)
-print("Time", time)
+time = np.arange(0, time_duration, 1 / sampling_frequency) 
+# np.arrange(start, stop, step)
 N = len(time) # Total number of samples
 sigma = np.random.normal(1, 0.01, N) # Random values drawn from a 
 # normal (Gaussian) distribution with mean= 1 and standard deviation= 0.01. 
 # This array represents the standard deviation of the noise at each time point.
-print("Sigma:",sigma)
+
 data = model(time, **injection_parameters) + np.random.normal(0, sigma, N) 
-# np.random.normal(loc (i.e the mean or centre of the distribution), scale(SD of the distribution), size (gives output shape))
+# np.random.normal(loc (i.e the mean or centre of the distribution), 
+# scale(SD of the distribution), size (gives output shape)).
 # This is the background gaussian noise
 
 # We quickly plot the data to check it looks sensible
@@ -50,23 +51,24 @@ ax.legend()
 
 fig.savefig("{}/{}_data.png".format(outdir, label))
 
-# Now lets instantiate a version of our GaussianLikelihood, giving it
-# the time, data and signal model
-likelihood = bilby.likelihood.GaussianLikelihood(time, data, model, sigma) # (x, y, python funtion to fit to the data, sigma) 
+# Now lets instantiate a version of our GaussianLikelihood, 
+# giving it the time, data and signal model
+likelihood = bilby.likelihood.GaussianLikelihood(time, data, model, sigma) 
+# (x, y, python funtion to fit to the data, sigma) 
 
 # From hereon, the syntax is exactly equivalent to other bilby examples
-# We make a prior
-priors = dict()
+# The larger the prior range the longer the sampler takes to run
+priors = dict() 
 priors["m"] = bilby.core.prior.Uniform(0, 5, "m")
 priors["c"] = bilby.core.prior.Uniform(-2, 2, "c")
-print (priors)
 
 # And run sampler
 result = bilby.run_sampler(
     likelihood=likelihood,
     priors=priors,
     sampler="dynesty",
-    nlive=250,
+    nlive=250, # minimum number of points for a good estimate is 500
+               # 100 is better for gravitational wave problems
     injection_parameters=injection_parameters,
     outdir=outdir,
     label=label,

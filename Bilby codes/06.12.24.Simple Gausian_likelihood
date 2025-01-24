@@ -21,9 +21,15 @@ bilby.utils.check_directory_exists_and_if_not_mkdir(outdir)
 # Making simulated data: in this case, we consider just a Gaussian
 
 data = np.random.normal(3, 4, 100) # (mean, SD, size)
-# plt.ylim(-40,40)
-# plt.axhline(np.mean(data),color='r', ls='--', label='Mean')
-# plt.plot(data, 'co')
+mean=np.mean(data)
+plt.ylim(-20,20)
+plt.axhline(mean,color='r', ls='--', label='Mean= %s'%np.round(mean,2))
+plt.plot(data, 'co', label='data')
+plt.xlabel('data points')
+plt.ylabel('SD')
+plt.legend()
+plt.savefig("{}/{}_data.png".format(outdir, label))
+
 
 # class SimpleGaussianLiklelihood is inheriting from bilby.liklelihood
 class SimpleGaussianLikelihood(bilby.Likelihood):
@@ -36,8 +42,10 @@ class SimpleGaussianLikelihood(bilby.Likelihood):
         data: array_like
             The data to analyse
         """
-        super().__init__(parameters={"mu": None, "sigma": None})# initializes the parent class
-        # mu is mean of the Gaussian distribution to be estimated and sigma is the SD
+        super().__init__(parameters={"mu": None, "sigma": None})
+        # initializes the parent class
+        # mu is mean of the Gaussian distribution to be estimated 
+        # and sigma is the SD
         self.data = data
         self.N = len(data)
 
@@ -45,7 +53,7 @@ class SimpleGaussianLikelihood(bilby.Likelihood):
         # it computes the log of the likelihood function
         mu = self.parameters["mu"]
         sigma = self.parameters["sigma"]
-        res = self.data - mu # residuals
+        res = self.data - mu # residuals 
         return -0.5 * (
             np.sum((res / sigma) ** 2) + self.N * np.log(2 * np.pi * sigma**2)
         )
