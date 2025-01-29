@@ -29,21 +29,47 @@ bilby.core.utils.random.seed(88170235)
 # parameters, including masses of the two black holes (mass_1, mass_2),
 # spins of both black holes (a, tilt, phi), etc.
 injection_parameters = dict(
-    mass_1=36.0,
+# Mass parameters
+    mass_1=36.0, # Masses of black holes, in solar masses.
     mass_2=29.0,
-    a_1=0.4,
+
+# Spin parameters
+    a_1=0.4, # Dimensionless spin magnitudes.
     a_2=0.3,
-    tilt_1=0.5,
-    tilt_2=1.0,
-    phi_12=1.7,
-    phi_jl=0.3,
-    luminosity_distance=2000.0,
-    theta_jn=0.4,
-    psi=2.659,
-    phase=1.3,
-    geocent_time=1126259642.413,
-    ra=1.375,
-    dec=-1.2108,
+
+    tilt_1=0.5, # The angle between the spin vector of the black holes
+    tilt_2=1.0, # and the orbital angular momentum, in radians.
+                # (0 means aligned, π means anti-aligned).
+
+    phi_12=1.7, # The azimuthal angle between the spin vectors of the two 
+                # black holes, in radians.
+    
+    phi_jl=0.3, # The azimuthal angle between the total angular momentum and 
+                # the orbital angular momentum, in radians.
+    
+# Distance parameter
+    luminosity_distance=2000.0,  # Distance to the binary system, in Mpc.
+
+# Angular Orientation parameters
+    theta_jn=0.4, # Inclination angle, i.e. the angle between the total
+                  # angular momentum vector and the line of sight, in radians
+
+    psi=2.659,  # The polarization angle, describing the orientation of the 
+                # binary's orbital plane relative to the observer, in radians.
+             
+    phase=1.3,  # The orbital phase of the binary at coalescence, in radians.
+
+# Time parameter
+    geocent_time=1126259642.413, # The time of the signal at the Earth's center, 
+                                 # in GPS seconds.
+                                 # This corresponds to the moment of coalescence
+
+#Sky Location parameters
+    ra=1.375,   # The right ascension (RA) of the binary system on 
+                # the celestial sphere, in radians.
+
+    dec=-1.2108,# The declination (Dec) of the binary system on 
+                # the celestial sphere, in radians.
 )
 
 # Fixed arguments passed into the source model
@@ -82,9 +108,9 @@ ifos.inject_signal(
 # prior is a delta function at the true, injected value.  In reality, the
 # sampler implementation is smart enough to not sample any parameter that has
 # a delta-function prior.
-# The above list does *not* include mass_1, mass_2, theta_jn and luminosity
-# distance, which means those are the parameters that will be included in the
-# sampler.  If we do nothing, then the default priors get used.
+# The below list does *not* include *mass_1*, *mass_2*, *luminosity_distance*, 
+# and *theta_jn* which means those are the parameters that will be included in
+# the sampler. If we do nothing, then the default priors get used.
 priors = bilby.gw.prior.BBHPriorDict()
 for key in [
     "a_1",
@@ -99,9 +125,11 @@ for key in [
     "geocent_time",
     "phase",
 ]:
-    priors[key] = injection_parameters[key]
+    priors[key] = injection_parameters[key] # setting their values to be equal 
+                                            # to the priors
 
-# Perform a check that the prior does not extend to a parameter space longer than the data
+# Perform a check that the prior does not extend to a parameter space 
+# longer than the data
 priors.validate_prior(duration, minimum_frequency)
 
 # Initialise the likelihood by passing in the interferometer data (ifos) and
