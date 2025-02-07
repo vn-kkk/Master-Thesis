@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # A few simple setup steps to check if an output directory exists
-label = "linear_regression_unknown_noise"
+label = "2.1 linear_regression_unknown_noise"
 outdir = "outdir_"+label
 bilby.utils.check_directory_exists_and_if_not_mkdir(outdir)
 

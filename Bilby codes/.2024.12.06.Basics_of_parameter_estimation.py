@@ -11,7 +11,7 @@ import numpy as np
 
 # A few simple setup steps
 label = "linear_regression"
-outdir = "outdir_Basics_of_parameter_estimation"
+outdir = "outdir_2.2 Basics_of_parameter_estimation"
 bilby.utils.check_directory_exists_and_if_not_mkdir(outdir)
 
 

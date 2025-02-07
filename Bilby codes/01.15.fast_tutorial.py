@@ -10,14 +10,12 @@ between luminosity distances of 100Mpc and 5Gpc, the cosmology is Planck15.
 
 import bilby
 
-# Set the duration and sampling frequency of the data segment that we're
-# going to inject the signal into
-duration = 4.0
-sampling_frequency = 2048.0
-minimum_frequency = 20
 
-# Specify the output directory and the name of the simulation.
-label = "fast_tutorial"
+############################## SETTING UP SIGNAL ###############################
+
+
+# Specify the logger and the output directory.
+label = "3.1 fast_tutorial"
 outdir = "outdir_"+label
 bilby.core.utils.setup_logger(outdir=outdir, label=label)
 
@@ -28,6 +26,11 @@ bilby.core.utils.random.seed(88170235)
 # dictionary of parameters that includes all of the different waveform
 # parameters, including masses of the two black holes (mass_1, mass_2),
 # spins of both black holes (a, tilt, phi), etc.
+
+
+############################# INJECTION PARAMETERS #############################
+
+
 injection_parameters = dict(
 # Mass parameters
     mass_1=36.0, # Masses of black holes, in solar masses.
@@ -64,7 +67,7 @@ injection_parameters = dict(
                                  # in GPS seconds.
                                  # This corresponds to the moment of coalescence
 
-#Sky Location parameters
+# Sky Location parameters
     ra=1.375,   # The right ascension (RA) of the binary system on 
                 # the celestial sphere, in radians.
 
@@ -72,9 +75,21 @@ injection_parameters = dict(
                 # the celestial sphere, in radians.
 )
 
+
+################################ WAVEFORM MODEL ################################
+
+
+# Set the duration and sampling frequency of the data segment that we're
+# going to inject the signal into
+duration = 4.0 # seconds
+sampling_frequency = 2048.0 # in Hz
+minimum_frequency = 20 # below this the detector sensitivity is poor
+start_time = injection_parameters["geocent_time"] - 2
+
 # Fixed arguments passed into the source model
 waveform_arguments = dict(
-    waveform_approximant="IMRPhenomPv2",
+    waveform_approximant="IMRPhenomPv2", # A phenomenological Inspiral-Merger-Ringdown
+                                         # model for a BBH
     reference_frequency=50.0,
     minimum_frequency=minimum_frequency,
 )
@@ -88,18 +103,28 @@ waveform_generator = bilby.gw.WaveformGenerator(
     waveform_arguments=waveform_arguments,
 )
 
+
+################################### DETECTOR ###################################
+
+
 # Set up interferometers.  In this case we'll use two interferometers
 # (LIGO-Hanford (H1), LIGO-Livingston (L1). These default to their design
 # sensitivity
 ifos = bilby.gw.detector.InterferometerList(["H1", "L1"])
+for interferometer in ifos:
+    interferometer.minimum_frequency = 40
 ifos.set_strain_data_from_power_spectral_densities(
     sampling_frequency=sampling_frequency,
     duration=duration,
-    start_time=injection_parameters["geocent_time"] - 2,
+    start_time=start_time,
 )
 ifos.inject_signal(
     waveform_generator=waveform_generator, parameters=injection_parameters
 )
+
+
+############################## BAYESIAN INFERENCE ##############################
+
 
 # Set up a PriorDict, which inherits from dict.
 # By default we will sample all terms in the signal models.  However, this will
@@ -111,7 +136,13 @@ ifos.inject_signal(
 # The below list does *not* include *mass_1*, *mass_2*, *luminosity_distance*, 
 # and *theta_jn* which means those are the parameters that will be included in
 # the sampler. If we do nothing, then the default priors get used.
+
+
+#################################### PRIORS ####################################
+
+
 priors = bilby.gw.prior.BBHPriorDict()
+
 for key in [
     "a_1",
     "a_2",
@@ -126,17 +157,25 @@ for key in [
     "phase",
 ]:
     priors[key] = injection_parameters[key] # setting their values to be equal 
-                                            # to the priors
+                                            # to the injection parameters
 
 # Perform a check that the prior does not extend to a parameter space 
 # longer than the data
 priors.validate_prior(duration, minimum_frequency)
+
+
+################################## LIKELIHOOD ##################################
+
 
 # Initialise the likelihood by passing in the interferometer data (ifos) and
 # the waveform generator
 likelihood = bilby.gw.GravitationalWaveTransient(
     interferometers=ifos, waveform_generator=waveform_generator
 )
+
+
+################################### SAMPLER ####################################
+
 
 # Run sampler.  In this case we're going to use the `dynesty` sampler
 result = bilby.run_sampler(

@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 
 
 # A few simple setup steps
-label = "simple_gausian_likelihood"
+label = "1 simple_gausian_likelihood"
 outdir = "outdir_"+label
 bilby.utils.check_directory_exists_and_if_not_mkdir(outdir)
 
