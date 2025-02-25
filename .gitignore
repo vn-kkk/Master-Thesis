@@ -1,4 +1,4 @@
 .conda/
 *.pdf
 outdir_*/
-Rough/
+.Rough/

@@ -11,7 +11,6 @@ from copy import deepcopy # creates independent copies of objects
 
 import bilby
 import numpy as np
-import pandas as pd
 from tqdm.auto import trange # to display progress bar for loops
 
 
@@ -19,7 +18,7 @@ from tqdm.auto import trange # to display progress bar for loops
 
 
 # Specify the output directory and the name of the simulation.
-label = "4.1 relative_binning_BBH"
+label = "4.3 relative_binning_BNS"
 outdir = "outdir_"+label
 bilby.core.utils.setup_logger(outdir=outdir, label=label)
 
@@ -32,19 +31,15 @@ np.random.seed(88170235)
 # spins of both black holes (a, tilt, phi), etc.
 injection_parameters = dict(
 # Mass parameters
-    mass_1=36.0,
-    mass_2=29.0,
+    mass_1=1.5,
+    mass_2=1.3,
 
 # Spin parameters
-    a_1=0.4,
-    a_2=0.3,
-    tilt_1=0.5,
-    tilt_2=1.0,
-    phi_12=1.7,
-    phi_jl=0.3,
-    
+    chi_1=0.02,
+    chi_2=0.02,
+
 # Distance parameter
-    luminosity_distance=2000.0,
+    luminosity_distance=50.0,
 
 # Angular orientation parameters
     theta_jn=0.4,
@@ -57,8 +52,13 @@ injection_parameters = dict(
 # Sky Location
     ra=1.375,
     dec=-1.2108,
-    fiducial=1, # Serves as a reference marker for the injection parameters. 
-                # Used while reweighting to identify the injection parameters
+
+# Tidal Deformability parameters
+    lambda_1=545.0,
+    lambda_2=1346.0,
+
+# Serves as a reference marker for the injection parameters.
+    fiducial=1, # Used while reweighting to identify the injection parameters
 )
 
 
@@ -67,25 +67,28 @@ injection_parameters = dict(
 
 # Set the duration and sampling frequency of the data segment that we're
 # going to inject the signal into
-duration = 4.0
+duration = 32
 sampling_frequency = 2048.0
-minimum_frequency = 20
+minimum_frequency = 75.0
+start_time = injection_parameters["geocent_time"] + 2 - duration
 
 # Fixed arguments passed into the source model
 waveform_arguments = dict(
-    waveform_approximant="IMRPhenomXP", # A phenomenological Inspiral-Merger-Ringdown
-                                        # model for a BBH
+    waveform_approximant="IMRPhenomPv2_NRTidal", # A phenomenological 
+                         # Inspiral-Merger-Ringdown model for a BNS
     reference_frequency=50.0,
     minimum_frequency=minimum_frequency,
 )
+
+
 
 # Create the waveform_generator using a LAL BinaryBlackHole source function
 waveform_generator = bilby.gw.WaveformGenerator(
     duration=duration,
     sampling_frequency=sampling_frequency,
-    # frequency_domain_source_model=bilby.gw.source.lal_binary_black_hole,
-    frequency_domain_source_model=bilby.gw.source.lal_binary_black_hole_relative_binning,
-    parameter_conversion=bilby.gw.conversion.convert_to_lal_binary_black_hole_parameters,
+    # frequency_domain_source_model=bilby.gw.source.lal_binary_neutron_star,
+    frequency_domain_source_model=bilby.gw.source.lal_binary_neutron_star_relative_binning,
+    parameter_conversion=bilby.gw.conversion.convert_to_lal_binary_neutron_star_parameters,
     waveform_arguments=waveform_arguments,
 )
 
@@ -93,14 +96,16 @@ waveform_generator = bilby.gw.WaveformGenerator(
 ################################### DETECTOR ###################################
 
 
-# Set up interferometers.  In this case we'll use two interferometers
-# (LIGO-Hanford (H1), LIGO-Livingston (L1). These default to their design
-# sensitivity
+# Set up interferometers.  In this case we'll use three interferometers
+# (LIGO-Hanford (H1), LIGO-Livingston (L1) and Virgo (V1)).
+# These default to their design sensitivity
 ifos = bilby.gw.detector.InterferometerList(["H1", "L1"])
+for interferometer in ifos:
+    interferometer.minimum_frequency = 75
 ifos.set_strain_data_from_power_spectral_densities(
     sampling_frequency=sampling_frequency,
     duration=duration,
-    start_time=injection_parameters["geocent_time"] - 2,
+    start_time=start_time,
 )
 ifos.inject_signal(
     waveform_generator=waveform_generator, parameters=injection_parameters
@@ -110,34 +115,34 @@ ifos.inject_signal(
 ############################## BAYESIAN INFERENCE ##############################
 
 
-# Set up a PriorDict, which inherits from dict.
-# By default we will sample all terms in the signal models.  However, this will
-# take a long time for the calculation, so for this example we will set almost
-# all of the priors to be equall to their injected values.  This implies the
-# prior is a delta function at the true, injected value.  In reality, the
-# sampler implementation is smart enough to not sample any parameter that has
-# a delta-function prior.
-# The below list does *not* include *mass_1*, *mass_2*, *theta_jn* and 
-# *luminosity_distance*, which means those are the parameters that will be 
-# included in the sampler.  If we do nothing, then the default priors get used.
+# Load the default prior for binary neutron stars.
+# We're going to sample in 
+# *chirp_mass*, *mass_ratio*, *lambda_tilde*, and *delta_lambda_tilde* 
+# rather than mass_1, mass_2, lambda_1, and lambda_2.
+# BNS have aligned spins by default, if you want to allow precessing spins
+# pass aligned_spin=False to the BNSPriorDict
 
+# The 4 output parameters are:
+
+# Symmetric mass ratio (q)
+# Chirp mass (M)
+# Luminosity distance (d_L)
+# Inclination angle (theta_JN)
+# lambda tilde 
+# delta lambda tilde
 
 #################################### PRIORS ####################################
 
 
-priors = bilby.gw.prior.BBHPriorDict()
+priors = bilby.gw.prior.BNSPriorDict()
 
 for key in [
-    "a_1",
-    "a_2",
-    "tilt_1",
-    "tilt_2",
-    "phi_12",
-    "phi_jl",
     "psi",
+    "geocent_time",
     "ra",
     "dec",
-    "geocent_time",
+    "chi_1",
+    "chi_2",
     "phase",
 ]:
     priors[key] = injection_parameters[key]
@@ -146,20 +151,61 @@ for key in [
 # longer than the data
 priors.validate_prior(duration, minimum_frequency)
 
+# # deleting these priors because we are assigning them new values
+# del priors["lambda_1"], priors["lambda_2"], priors["mass_ratio"]
+
+# priors["chirp_mass"] = bilby.core.prior.Gaussian(
+#     1.215, 0.1, name="chirp_mass", unit="$M_{\\odot}$"
+# )
+# priors["symmetric_mass_ratio"] = bilby.core.prior.Uniform(
+#     0.1, 0.25, name="symmetric_mass_ratio"
+# )
+# priors["lambda_tilde"] = bilby.core.prior.Uniform(0, 3000, name="lambda_tilde"
+# )
+# priors["delta_lambda_tilde"] = bilby.core.prior.Uniform(
+#     -500, 1000, name="delta_lambda_tilde"
+# )
+
+# # constraining these parameters to prevent out of bounds sampling.
+# priors["lambda_tilde"] = bilby.core.prior.Constraint(
+#     name="lambda_tilde", minimum=0, maximum=3000
+# )
+# priors["delta_lambda_tilde"] = bilby.core.prior.Constraint(
+#     name="delta_lambda_tilde", minimum=-500, maximum=1000
+# )
+# priors["lambda_1"] = bilby.core.prior.Constraint(
+#     name="lambda_1", minimum=100, maximum=5000
+# )
+# priors["lambda_2"] = bilby.core.prior.Constraint(
+#     name="lambda_2", minimum=100, maximum=5000
+# )
+
 
 ################################## LIKELIHOOD ##################################
 
 
 # Set up the fiducial parameters for the relative binning likelihood to be the
-# injected parameters. Note that because we sample in chirp mass and mass ratio
-# but injected with mass_1 and mass_2, we need to convert the mass parameters
+# injected parameters. Note that because we sample in chirp mass, mass ratio,
+# lambda_tilde and delta_lambda_tilde but injected with mass_1, mass_2,
+# lambda_1, and lambda_2, we need to convert the mass and tidal deformability
+# parameters
 fiducial_parameters = injection_parameters.copy()
+
 m1 = fiducial_parameters.pop("mass_1")
 m2 = fiducial_parameters.pop("mass_2")
 fiducial_parameters["chirp_mass"] = bilby.gw.conversion.component_masses_to_chirp_mass(
     m1, m2) # Chirp mass (M) (one of the prameters being estimated)
-fiducial_parameters["mass_ratio"] = m2 / m1 # mass ratio (q)
-                                            # (another prameter being estimated)
+
+# fiducial_parameters["mass_ratio"] = m2 / m1
+fiducial_parameters["symmetric_mass_ratio"] = m1*m2 / (m1+m2)**2 
+                   # symmetric mass ratio (eta) (another estimated parameter)
+
+l1=fiducial_parameters.pop("lambda_1")
+l2=fiducial_parameters.pop("lambda_2")
+fiducial_parameters["lambda_tilde"] =bilby.gw.conversion.lambda_1_lambda_2_to_lambda_tilde(
+    l1,l2,m1,m2) # Lambda tilde (another prameter being estimated)
+fiducial_parameters["delta_lambda_tilde"]=bilby.gw.conversion.lambda_1_lambda_2_to_delta_lambda_tilde(
+    l1,l2,m1,m2) # Delta lambda tilde (another prameter being estimated)
 
 # Initialise the likelihood by passing in the interferometer data (ifos) and
 # the waveform generator
@@ -180,12 +226,12 @@ result = bilby.run_sampler(
     likelihood=likelihood,
     priors=priors,
     sampler="nestle",
-    npoints=1000,
+    npoints=100,
     injection_parameters=injection_parameters,
     outdir=outdir,
     label=label,
-    conversion_function=bilby.gw.conversion.generate_all_bbh_parameters,
-)
+    conversion_function=bilby.gw.conversion.generate_all_bns_parameters,
+    )
 
 
 ####################### REWIGHTING WITH FULL LIKELIHOOD ########################
@@ -194,9 +240,9 @@ result = bilby.run_sampler(
 alt_waveform_generator = bilby.gw.WaveformGenerator(
     duration=duration,
     sampling_frequency=sampling_frequency,
-    frequency_domain_source_model=bilby.gw.source.lal_binary_black_hole,
-    # frequency_domain_source_model=lal_binary_black_hole_relative_binning,
-    parameter_conversion=bilby.gw.conversion.convert_to_lal_binary_black_hole_parameters,
+    frequency_domain_source_model=bilby.gw.source.lal_binary_neutron_star,
+    # frequency_domain_source_model=lal_binary_neutron_star_relative_binning,
+    parameter_conversion=bilby.gw.conversion.convert_to_lal_binary_neutron_star_parameters,
     waveform_arguments=waveform_arguments,
 )
 
@@ -220,6 +266,14 @@ for ii in trange(len(result.posterior)):
     )
 weights = np.exp(weights)
 
+# Checking for Nan or Inf values
+# def check_for_invalid_values(weights):
+#     if np.any(np.isnan(weights)) or np.any(np.isinf(weights)):
+#         print("Warning: NaN or Inf values detected in weights")
+#     return weights
+# weights = check_for_invalid_values(weights)
+# weights = np.nan_to_num(weights, nan=0.0, posinf=0.0, neginf=0.0)
+
 # Compute efficiency and Bayes factor between binned and unbinned methods
 print(
     f"""Reweighting efficiency is 
@@ -233,41 +287,9 @@ alt_result = deepcopy(result)
 keep = weights > np.random.uniform(0, max(weights), len(weights))
 alt_result.posterior = result.posterior.iloc[keep]
 
-# # Plotting the true parameters for reference.
-# true_parameters= injection_parameters.copy()
-# true_parameters.pop("fiducial", None)
-
-
-# # Convert all posterior values to numeric, forcing errors to NaN
-# result.posterior = result.posterior.apply(pd.to_numeric, errors='coerce')
-# # Drop any rows with NaN or Inf values
-# result.posterior = result.posterior.replace([np.inf, -np.inf], np.nan).dropna()
-# # Check if any invalid values remain
-# if result.posterior.isnull().values.any():
-#     print("Warning: Some posterior values are still NaN after conversion!")
-
-
-# true_parameters={
-#     key:injection_parameters[key]
-#     for key in result.posterior.columns if key in injection_parameters
-# }
-
-
-# if result.posterior.isnull().values.any():
-#     print("Warning: NaN values found in posterior samples!")
-# if np.isinf(result.posterior.values).any():
-#     print("Warning: Infinite values found in posterior samples!")
-
-
-# for key, value in true_parameters.items():
-#     if not np.isfinite(value):
-#         print(f"Warning: Non-finite injection value for {key}: {value}")
-
-
 # Make a comparison corner plot.
 bilby.core.result.plot_multiple(
     [result, alt_result],
     labels=["Binned (Relative binning)", "Reweighted (Unbinned likelihood)"],
     filename=f"{outdir}/{label}_corner.png",
-    # truth=true_parameters
 )
