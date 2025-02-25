@@ -1,0 +1,13 @@
+JOB bbh_injection_data0_0_generation_arg_0 outdir_bbh_injection/submit/bbh_injection_data0_0_generation.submit
+VARS bbh_injection_data0_0_generation_arg_0 ARGS="outdir_bbh_injection/bbh_injection_config_complete.ini --local --label bbh_injection_data0_0_generation --idx 0 --trigger-time 0 --injection-file outdir_bbh_injection/data/bbh_injection_injection_file.dat --outdir outdir_bbh_injection"
+Retry bbh_injection_data0_0_generation_arg_0 3
+JOB bbh_injection_data0_0_analysis_H1L1_arg_0 outdir_bbh_injection/submit/bbh_injection_data0_0_analysis_H1L1.submit
+VARS bbh_injection_data0_0_analysis_H1L1_arg_0 ARGS="outdir_bbh_injection/bbh_injection_config_complete.ini --local --outdir outdir_bbh_injection --detectors H1 --detectors L1 --label bbh_injection_data0_0_analysis_H1L1 --data-dump-file outdir_bbh_injection/data/bbh_injection_data0_0_generation_data_dump.pickle --sampler dynesty"
+Retry bbh_injection_data0_0_analysis_H1L1_arg_0 3
+JOB bbh_injection_data0_0_analysis_H1L1_final_result_arg_0 outdir_bbh_injection/submit/bbh_injection_data0_0_analysis_H1L1_final_result.submit
+VARS bbh_injection_data0_0_analysis_H1L1_final_result_arg_0 ARGS="--result outdir_bbh_injection/result/bbh_injection_data0_0_analysis_H1L1_result.hdf5 --outdir outdir_bbh_injection/final_result --extension hdf5 --max-samples 20000 --lightweight --save"
+ENV GET HTGETTOKENOPTS
+
+#Inter-job dependencies
+Parent bbh_injection_data0_0_generation_arg_0 Child bbh_injection_data0_0_analysis_H1L1_arg_0
+Parent bbh_injection_data0_0_analysis_H1L1_arg_0 Child bbh_injection_data0_0_analysis_H1L1_final_result_arg_0

@@ -1,0 +1,22 @@
+universe = vanilla
+executable = /home/kay/anaconda3/envs/thesis/bin/bilby_result
+request_memory = 4 GB
+request_disk = 5GB
+request_cpus = 1
+initialdir = /home/kay/anaconda3/envs/thesis/Thesis Codes/bilby workshop/Lecture 2
+notification = Never
+requirements = 
+should_transfer_files = YES
+transfer_input_files = outdir_bbh_injection/result/bbh_injection_data0_0_analysis_H1L1_result.hdf5
+transfer_output_files = outdir_bbh_injection/final_result
+when_to_transfer_output = ON_EXIT_OR_EVICT
+preserve_relative_paths = True
+stream_error = True
+stream_output = True
+log = outdir_bbh_injection/log_data_analysis/bbh_injection_data0_0_analysis_H1L1_final_result.log
+output = outdir_bbh_injection/log_data_analysis/bbh_injection_data0_0_analysis_H1L1_final_result.out
+error = outdir_bbh_injection/log_data_analysis/bbh_injection_data0_0_analysis_H1L1_final_result.err
+priority = 0
+environment = "HDF5_USE_FILE_LOCKING=FAlSE OMP_NUM_THREADS=1 OMP_PROC_BIND=false GWDATAFIND_SERVER=https://datafind.igwn.org"
+arguments = $(ARGS)
+queue

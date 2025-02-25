@@ -1,0 +1,241 @@
+16:38 INFO    : Waveform generator initiated with
+  frequency_domain_source_model: bilby.gw.source.lal_binary_black_hole
+  time_domain_source_model: None
+  parameter_conversion: bilby.gw.conversion.convert_to_lal_binary_black_hole_parameters
+16:38 INFO    : Injected signal in H1:
+16:38 INFO    :   optimal SNR = 11.78
+16:38 INFO    :   matched filter SNR = 10.70-1.01j
+16:38 INFO    :   mass_1 = 36.0
+16:38 INFO    :   mass_2 = 29.0
+16:38 INFO    :   a_1 = 0.4
+16:38 INFO    :   a_2 = 0.3
+16:38 INFO    :   tilt_1 = 0.5
+16:38 INFO    :   tilt_2 = 1.0
+16:38 INFO    :   phi_12 = 1.7
+16:38 INFO    :   phi_jl = 0.3
+16:38 INFO    :   luminosity_distance = 2000.0
+16:38 INFO    :   theta_jn = 0.4
+16:38 INFO    :   psi = 2.659
+16:38 INFO    :   phase = 1.3
+16:38 INFO    :   geocent_time = 1126259642.413
+16:38 INFO    :   ra = 1.375
+16:38 INFO    :   dec = -1.2108
+16:38 INFO    : Injected signal in L1:
+16:38 INFO    :   optimal SNR = 9.53
+16:38 INFO    :   matched filter SNR = 7.71+0.41j
+16:38 INFO    :   mass_1 = 36.0
+16:38 INFO    :   mass_2 = 29.0
+16:38 INFO    :   a_1 = 0.4
+16:38 INFO    :   a_2 = 0.3
+16:38 INFO    :   tilt_1 = 0.5
+16:38 INFO    :   tilt_2 = 1.0
+16:38 INFO    :   phi_12 = 1.7
+16:38 INFO    :   phi_jl = 0.3
+16:38 INFO    :   luminosity_distance = 2000.0
+16:38 INFO    :   theta_jn = 0.4
+16:38 INFO    :   psi = 2.659
+16:38 INFO    :   phase = 1.3
+16:38 INFO    :   geocent_time = 1126259642.413
+16:38 INFO    :   ra = 1.375
+16:38 INFO    :   dec = -1.2108
+16:38 INFO    : No prior given, using default BBH priors in /home/kay/anaconda3/envs/thesis/lib/python3.11/site-packages/bilby/gw/prior_files/precessing_spins_bbh.prior.
+16:38 INFO    : Running for label 'fast_tutorial', output will be saved to 'outdir_fast_tutorial'
+16:38 INFO    : Using lal version 7.6.1
+16:38 INFO    : Using lal git version Branch: None;Tag: lalsuite-v7.25;Id: fafc22fe7c166517798534eeca175f27a66e0138;;Builder: Unknown User <>;Repository status: CLEAN: All modifications committed
+16:38 INFO    : Using lalsimulation version 6.1.0
+16:38 INFO    : Using lalsimulation git version Branch: None;Tag: lalsuite-v7.25;Id: fafc22fe7c166517798534eeca175f27a66e0138;;Builder: Unknown User <>;Repository status: CLEAN: All modifications committed
+16:38 INFO    : Analysis priors:
+16:38 INFO    : mass_ratio=bilby.gw.prior.UniformInComponentsMassRatio(minimum=0.125, maximum=1, name='mass_ratio', latex_label='$q$', unit=None, boundary=None, equal_mass=False)
+16:38 INFO    : chirp_mass=bilby.gw.prior.UniformInComponentsChirpMass(minimum=25, maximum=100, name='chirp_mass', latex_label='$\\mathcal{M}$', unit=None, boundary=None)
+16:38 INFO    : luminosity_distance=bilby.gw.prior.UniformSourceFrame(minimum=100.0, maximum=5000.0, cosmology='Planck15', name='luminosity_distance', latex_label='$d_L$', unit='Mpc', boundary=None)
+16:38 INFO    : theta_jn=Sine(minimum=0, maximum=3.141592653589793, name='theta_jn', latex_label='$\\theta_{JN}$', unit=None, boundary=None)
+16:38 INFO    : mass_1=Constraint(minimum=5, maximum=100, name='mass_1', latex_label='$m_1$', unit=None)
+16:38 INFO    : mass_2=Constraint(minimum=5, maximum=100, name='mass_2', latex_label='$m_2$', unit=None)
+16:38 INFO    : dec=-1.2108
+16:38 INFO    : ra=1.375
+16:38 INFO    : psi=2.659
+16:38 INFO    : phase=1.3
+16:38 INFO    : a_1=0.4
+16:38 INFO    : a_2=0.3
+16:38 INFO    : tilt_1=0.5
+16:38 INFO    : tilt_2=1.0
+16:38 INFO    : phi_12=1.7
+16:38 INFO    : phi_jl=0.3
+16:38 INFO    : geocent_time=1126259642.413
+16:38 INFO    : Analysis likelihood class: <class 'bilby.gw.likelihood.base.GravitationalWaveTransient'>
+16:38 INFO    : Analysis likelihood noise evidence: -8101.6532222862525
+16:38 INFO    : Single likelihood evaluation took 1.824e-03 s
+16:38 INFO    : Using sampler Dynesty with kwargs {'nlive': 1000, 'bound': 'live', 'sample': 'act-walk', 'periodic': None, 'reflective': None, 'update_interval': 600, 'first_update': None, 'npdim': None, 'rstate': None, 'queue_size': 1, 'pool': None, 'use_pool': None, 'live_points': None, 'logl_args': None, 'logl_kwargs': None, 'ptform_args': None, 'ptform_kwargs': None, 'gradient': None, 'grad_args': None, 'grad_kwargs': None, 'compute_jac': False, 'enlarge': None, 'bootstrap': None, 'walks': 100, 'facc': 0.2, 'slices': None, 'fmove': 0.9, 'max_move': 100, 'update_func': None, 'ncdim': None, 'blob': False, 'save_history': False, 'history_filename': None, 'maxiter': None, 'maxcall': None, 'dlogz': 0.1, 'logl_max': inf, 'n_effective': None, 'add_live': True, 'print_progress': True, 'print_func': <bound method Dynesty._print_func of <bilby.core.sampler.dynesty.Dynesty object at 0x7fe6e1c86750>>, 'save_bounds': False, 'checkpoint_file': None, 'checkpoint_every': 60, 'resume': False, 'seed': None}
+16:38 INFO    : Checkpoint every check_point_delta_t = 600s
+16:38 INFO    : Using dynesty version 2.1.4
+16:38 INFO    : Using the bilby-implemented act-walk sampling tracking the autocorrelation function and thinning by 2 with maximum length 10000
+16:38 INFO    : Resume file outdir_fast_tutorial/fast_tutorial_resume.pickle does not exist.
+16:38 INFO    : Generating initial points from the prior
+16:49 INFO    : Written checkpoint file outdir_fast_tutorial/fast_tutorial_resume.pickle
+16:59 INFO    : Written checkpoint file outdir_fast_tutorial/fast_tutorial_resume.pickle
+17:03 INFO    : Written checkpoint file outdir_fast_tutorial/fast_tutorial_resume.pickle
+17:03 INFO    : Rejection sampling nested samples to obtain 3324 posterior samples
+17:03 INFO    : Sampling time: 0:25:03.539711
+17:03 INFO    : Summary of results:
+nsamples: 3324
+ln_noise_evidence: -8101.653
+ln_evidence: -8026.659 +/-  0.132
+ln_bayes_factor: 74.994 +/-  0.132
+
+17:07 INFO    : Waveform generator initiated with
+  frequency_domain_source_model: bilby.gw.source.lal_binary_black_hole
+  time_domain_source_model: None
+  parameter_conversion: bilby.gw.conversion.convert_to_lal_binary_black_hole_parameters
+17:07 INFO    : Injected signal in H1:
+17:07 INFO    :   optimal SNR = 11.78
+17:07 INFO    :   matched filter SNR = 10.70-1.01j
+17:07 INFO    :   mass_1 = 36.0
+17:07 INFO    :   mass_2 = 29.0
+17:07 INFO    :   a_1 = 0.4
+17:07 INFO    :   a_2 = 0.3
+17:07 INFO    :   tilt_1 = 0.5
+17:07 INFO    :   tilt_2 = 1.0
+17:07 INFO    :   phi_12 = 1.7
+17:07 INFO    :   phi_jl = 0.3
+17:07 INFO    :   luminosity_distance = 2000.0
+17:07 INFO    :   theta_jn = 0.4
+17:07 INFO    :   psi = 2.659
+17:07 INFO    :   phase = 1.3
+17:07 INFO    :   geocent_time = 1126259642.413
+17:07 INFO    :   ra = 1.375
+17:07 INFO    :   dec = -1.2108
+17:07 INFO    : Injected signal in L1:
+17:07 INFO    :   optimal SNR = 9.53
+17:07 INFO    :   matched filter SNR = 7.71+0.41j
+17:07 INFO    :   mass_1 = 36.0
+17:07 INFO    :   mass_2 = 29.0
+17:07 INFO    :   a_1 = 0.4
+17:07 INFO    :   a_2 = 0.3
+17:07 INFO    :   tilt_1 = 0.5
+17:07 INFO    :   tilt_2 = 1.0
+17:07 INFO    :   phi_12 = 1.7
+17:07 INFO    :   phi_jl = 0.3
+17:07 INFO    :   luminosity_distance = 2000.0
+17:07 INFO    :   theta_jn = 0.4
+17:07 INFO    :   psi = 2.659
+17:07 INFO    :   phase = 1.3
+17:07 INFO    :   geocent_time = 1126259642.413
+17:07 INFO    :   ra = 1.375
+17:07 INFO    :   dec = -1.2108
+17:07 INFO    : No prior given, using default BBH priors in /home/kay/anaconda3/envs/thesis/lib/python3.11/site-packages/bilby/gw/prior_files/precessing_spins_bbh.prior.
+17:07 INFO    : Running for label 'fast_tutorial', output will be saved to 'outdir_fast_tutorial'
+17:07 INFO    : Using lal version 7.6.1
+17:07 INFO    : Using lal git version Branch: None;Tag: lalsuite-v7.25;Id: fafc22fe7c166517798534eeca175f27a66e0138;;Builder: Unknown User <>;Repository status: CLEAN: All modifications committed
+17:07 INFO    : Using lalsimulation version 6.1.0
+17:07 INFO    : Using lalsimulation git version Branch: None;Tag: lalsuite-v7.25;Id: fafc22fe7c166517798534eeca175f27a66e0138;;Builder: Unknown User <>;Repository status: CLEAN: All modifications committed
+17:07 INFO    : Analysis priors:
+17:07 INFO    : mass_ratio=bilby.gw.prior.UniformInComponentsMassRatio(minimum=0.125, maximum=1, name='mass_ratio', latex_label='$q$', unit=None, boundary=None, equal_mass=False)
+17:07 INFO    : chirp_mass=bilby.gw.prior.UniformInComponentsChirpMass(minimum=25, maximum=100, name='chirp_mass', latex_label='$\\mathcal{M}$', unit=None, boundary=None)
+17:07 INFO    : luminosity_distance=bilby.gw.prior.UniformSourceFrame(minimum=100.0, maximum=5000.0, cosmology='Planck15', name='luminosity_distance', latex_label='$d_L$', unit='Mpc', boundary=None)
+17:07 INFO    : theta_jn=Sine(minimum=0, maximum=3.141592653589793, name='theta_jn', latex_label='$\\theta_{JN}$', unit=None, boundary=None)
+17:07 INFO    : mass_1=Constraint(minimum=5, maximum=100, name='mass_1', latex_label='$m_1$', unit=None)
+17:07 INFO    : mass_2=Constraint(minimum=5, maximum=100, name='mass_2', latex_label='$m_2$', unit=None)
+17:07 INFO    : dec=-1.2108
+17:07 INFO    : ra=1.375
+17:07 INFO    : psi=2.659
+17:07 INFO    : phase=1.3
+17:07 INFO    : a_1=0.4
+17:07 INFO    : a_2=0.3
+17:07 INFO    : tilt_1=0.5
+17:07 INFO    : tilt_2=1.0
+17:07 INFO    : phi_12=1.7
+17:07 INFO    : phi_jl=0.3
+17:07 INFO    : geocent_time=1126259642.413
+17:07 INFO    : Analysis likelihood class: <class 'bilby.gw.likelihood.base.GravitationalWaveTransient'>
+17:07 INFO    : Analysis likelihood noise evidence: -8101.6532222862525
+17:07 INFO    : Single likelihood evaluation took 1.914e-03 s
+17:07 INFO    : Checkpoint every check_point_delta_t = 600s
+17:07 WARNING : Using cached result
+17:07 INFO    : Summary of results:
+nsamples: 3324
+ln_noise_evidence: -8101.653
+ln_evidence: -8026.659 +/-  0.132
+ln_bayes_factor: 74.994 +/-  0.132
+
+12:39 INFO    : Waveform generator initiated with
+  frequency_domain_source_model: bilby.gw.source.lal_binary_black_hole
+  time_domain_source_model: None
+  parameter_conversion: bilby.gw.conversion.convert_to_lal_binary_black_hole_parameters
+12:39 INFO    : Injected signal in H1:
+12:39 INFO    :   optimal SNR = 10.58
+12:39 INFO    :   matched filter SNR = 9.47-1.33j
+12:39 INFO    :   mass_1 = 36.0
+12:39 INFO    :   mass_2 = 29.0
+12:39 INFO    :   a_1 = 0.4
+12:39 INFO    :   a_2 = 0.3
+12:39 INFO    :   tilt_1 = 0.5
+12:39 INFO    :   tilt_2 = 1.0
+12:39 INFO    :   phi_12 = 1.7
+12:39 INFO    :   phi_jl = 0.3
+12:39 INFO    :   luminosity_distance = 2000.0
+12:39 INFO    :   theta_jn = 0.4
+12:39 INFO    :   psi = 2.659
+12:39 INFO    :   phase = 1.3
+12:39 INFO    :   geocent_time = 1126259642.413
+12:39 INFO    :   ra = 1.375
+12:39 INFO    :   dec = -1.2108
+12:39 INFO    : Injected signal in L1:
+12:39 INFO    :   optimal SNR = 8.56
+12:39 INFO    :   matched filter SNR = 6.18+0.20j
+12:39 INFO    :   mass_1 = 36.0
+12:39 INFO    :   mass_2 = 29.0
+12:39 INFO    :   a_1 = 0.4
+12:39 INFO    :   a_2 = 0.3
+12:39 INFO    :   tilt_1 = 0.5
+12:39 INFO    :   tilt_2 = 1.0
+12:39 INFO    :   phi_12 = 1.7
+12:39 INFO    :   phi_jl = 0.3
+12:39 INFO    :   luminosity_distance = 2000.0
+12:39 INFO    :   theta_jn = 0.4
+12:39 INFO    :   psi = 2.659
+12:39 INFO    :   phase = 1.3
+12:39 INFO    :   geocent_time = 1126259642.413
+12:39 INFO    :   ra = 1.375
+12:39 INFO    :   dec = -1.2108
+12:39 INFO    : No prior given, using default BBH priors in /home/kay/anaconda3/envs/thesis/lib/python3.11/site-packages/bilby/gw/prior_files/precessing_spins_bbh.prior.
+12:39 INFO    : Running for label 'fast_tutorial', output will be saved to 'outdir_fast_tutorial'
+12:39 INFO    : Using lal version 7.6.1
+12:39 INFO    : Using lal git version Branch: None;Tag: lalsuite-v7.25;Id: fafc22fe7c166517798534eeca175f27a66e0138;;Builder: Unknown User <>;Repository status: CLEAN: All modifications committed
+12:39 INFO    : Using lalsimulation version 6.1.0
+12:39 INFO    : Using lalsimulation git version Branch: None;Tag: lalsuite-v7.25;Id: fafc22fe7c166517798534eeca175f27a66e0138;;Builder: Unknown User <>;Repository status: CLEAN: All modifications committed
+12:39 INFO    : Analysis priors:
+12:39 INFO    : mass_ratio=bilby.gw.prior.UniformInComponentsMassRatio(minimum=0.125, maximum=1, name='mass_ratio', latex_label='$q$', unit=None, boundary=None, equal_mass=False)
+12:39 INFO    : chirp_mass=bilby.gw.prior.UniformInComponentsChirpMass(minimum=25, maximum=100, name='chirp_mass', latex_label='$\\mathcal{M}$', unit=None, boundary=None)
+12:39 INFO    : luminosity_distance=bilby.gw.prior.UniformSourceFrame(minimum=100.0, maximum=5000.0, cosmology='Planck15', name='luminosity_distance', latex_label='$d_L$', unit='Mpc', boundary=None)
+12:39 INFO    : theta_jn=Sine(minimum=0, maximum=3.141592653589793, name='theta_jn', latex_label='$\\theta_{JN}$', unit=None, boundary=None)
+12:39 INFO    : mass_1=Constraint(minimum=5, maximum=100, name='mass_1', latex_label='$m_1$', unit=None)
+12:39 INFO    : mass_2=Constraint(minimum=5, maximum=100, name='mass_2', latex_label='$m_2$', unit=None)
+12:39 INFO    : dec=-1.2108
+12:39 INFO    : ra=1.375
+12:39 INFO    : psi=2.659
+12:39 INFO    : phase=1.3
+12:39 INFO    : a_1=0.4
+12:39 INFO    : a_2=0.3
+12:39 INFO    : tilt_1=0.5
+12:39 INFO    : tilt_2=1.0
+12:39 INFO    : phi_12=1.7
+12:39 INFO    : phi_jl=0.3
+12:39 INFO    : geocent_time=1126259642.413
+12:39 INFO    : Analysis likelihood class: <class 'bilby.gw.likelihood.base.GravitationalWaveTransient'>
+12:39 INFO    : Analysis likelihood noise evidence: -7912.593366976376
+12:39 INFO    : Single likelihood evaluation took 1.741e-03 s
+12:39 INFO    : Using sampler Dynesty with kwargs {'nlive': 1000, 'bound': 'live', 'sample': 'act-walk', 'periodic': None, 'reflective': None, 'update_interval': 600, 'first_update': None, 'npdim': None, 'rstate': None, 'queue_size': 1, 'pool': None, 'use_pool': None, 'live_points': None, 'logl_args': None, 'logl_kwargs': None, 'ptform_args': None, 'ptform_kwargs': None, 'gradient': None, 'grad_args': None, 'grad_kwargs': None, 'compute_jac': False, 'enlarge': None, 'bootstrap': None, 'walks': 100, 'facc': 0.2, 'slices': None, 'fmove': 0.9, 'max_move': 100, 'update_func': None, 'ncdim': None, 'blob': False, 'save_history': False, 'history_filename': None, 'maxiter': None, 'maxcall': None, 'dlogz': 0.1, 'logl_max': inf, 'n_effective': None, 'add_live': True, 'print_progress': True, 'print_func': <bound method Dynesty._print_func of <bilby.core.sampler.dynesty.Dynesty object at 0x7f04465bd610>>, 'save_bounds': False, 'checkpoint_file': None, 'checkpoint_every': 60, 'resume': False, 'seed': None}
+12:39 INFO    : Checkpoint every check_point_delta_t = 600s
+12:39 INFO    : Using dynesty version 2.1.4
+12:39 INFO    : Using the bilby-implemented act-walk sampling tracking the autocorrelation function and thinning by 2 with maximum length 10000
+12:39 INFO    : Reading resume file outdir_fast_tutorial/fast_tutorial_resume.pickle
+12:39 INFO    : Resume file successfully loaded.
+12:39 INFO    : Written checkpoint file outdir_fast_tutorial/fast_tutorial_resume.pickle
+12:39 INFO    : Rejection sampling nested samples to obtain 3348 posterior samples
+12:39 INFO    : Sampling time: 0:25:03.544446
+12:39 INFO    : Summary of results:
+nsamples: 3348
+ln_noise_evidence: -7912.593
+ln_evidence: -7837.599 +/-  0.132
+ln_bayes_factor: 74.994 +/-  0.132
+
