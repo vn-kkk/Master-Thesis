@@ -1,4 +1,8 @@
 .conda/
 *.pdf
-outdir_*/
-.Rough/
+**/outdir_*/
+**/Cluster\ run\ 1/
+**/00.\ Rough/
+**.txt
+**.sh
+
