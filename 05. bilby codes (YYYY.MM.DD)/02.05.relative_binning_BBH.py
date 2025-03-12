@@ -36,12 +36,8 @@ injection_parameters = dict(
     mass_2=29.0,
 
 # Spin parameters
-    a_1=0.4,
-    a_2=0.3,
-    tilt_1=0.5,
-    tilt_2=1.0,
-    phi_12=1.7,
-    phi_jl=0.3,
+    chi_1=0.2
+    chi_2=0.2
     
 # Distance parameter
     luminosity_distance=2000.0,

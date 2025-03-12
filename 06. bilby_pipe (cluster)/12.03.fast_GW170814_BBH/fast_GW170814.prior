@@ -1,0 +1,26 @@
+# These are the priors for analysing GW170814.
+
+chirp_mass = Uniform(name='chirp_mass', minimum=12, maximum=60, unit='$M_{\\odot}$')
+mass_ratio = Uniform(name='mass_ratio', minimum=0.125, maximum=1)
+
+a_1 =  0.4
+a_2 =  0.3
+tilt_1 =  0.5
+tilt_2 =  1.0
+phi_12 =  1.7
+phi_jl =  0.3
+
+# Here we use a luminosity distance consistent with LAL analyses for comparison.
+luminosity_distance = bilby.core.prior.PowerLaw(alpha=2, name='luminosity_distance', minimum=300, maximum=3000, unit='Mpc', latex_label='$d_L$')
+
+theta_jn = Sine(minimum=0, maximum=3.141592653589793, name='theta_jn', latex_label='$\\theta_{JN}$', unit=None, boundary=None)
+
+dec =  -1.2108
+
+ra =  1.375
+
+psi =  2.659
+
+phase =  1.3
+
+geocent_time = 1186741861.5

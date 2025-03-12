@@ -129,7 +129,7 @@ ifos.inject_signal(
 # Set up a PriorDict, which inherits from dict.
 # By default we will sample all terms in the signal models.  However, this will
 # take a long time for the calculation, so for this example we will set almost
-# all of the priors to be equall to their injected values.  This implies the
+# all of the priors to be equal to their injected values.  This implies the
 # prior is a delta function at the true, injected value.  In reality, the
 # sampler implementation is smart enough to not sample any parameter that has
 # a delta-function prior.

@@ -5,4 +5,5 @@
 **/00.\ Rough/
 **.txt
 **.sh
-
+**/results_*/
+**.npz
