@@ -292,10 +292,13 @@ for epoch in range(epochs):
 model.load_state_dict(best_model_state)
 print(f"Training finished. Best validation loss: {best_val_loss:.10f}")
 
-# 7. Final PLot after training finishes
+# 7. Final Plot after training finishes
 plot_and_save_losses(train_losses, val_losses, filename="loss_curve_final.png")
+
+# 8. Saving the best model to be loaded later
 torch.save(model.state_dict(), os.path.join(save_dir, "Best_EOS_Model.pth"))
 
+print("Training complete. Best validation loss:", best_val_loss)
 
 ################################################################################
 ################################################################################

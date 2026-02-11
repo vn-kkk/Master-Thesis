@@ -1,72 +1,91 @@
+################################################################################
+################################################################################
+# IMPORT ALL REQUIRED MODULES
+################################################################################
+################################################################################
 import os
-import numpy as np
+import sys
 import torch
+
+import numpy as np
 import torch.nn as nn
 import torch.optim as optim
+import matplotlib.pyplot as plt
+
 from torch.utils.data import DataLoader, TensorDataset
-import matplotlib
-import matplotlib as plt
-import sys
-matplotlib.use('Agg')
 
-# --- GLOBAL CONFIGURATION (Needs to be defined inside the script) ---
-BATCH_SIZE = 256
-DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-EPOCHS = 100
-NUM_FILES_TO_USE = 399700
-# save_dir = f"{NUM_FILES_TO_USE}files_MRTD"
 
-# ==============================================================================
-# LOADING DATASETS for cluster:
-# ==============================================================================
+################################################################################
+################################################################################
+# PYTORCH TO LOAD AND PREP THE DATA
+################################################################################
+################################################################################
+NUM_FILES_TO_USE = 100   # Out of 399755 
+# The rest is used as "unseen" data to test the trained model
+# Directory to save/load dataset and models 
+# If not defined, model will save in current directory.
+save_dir = f"{NUM_FILES_TO_USE}files"
+
+# ==========================================================
+# 1. Load datasets for cluster:
+# ==========================================================
 try:
-    train_data = np.load("train_data_files.npy")
-    val_data = np.load("val_data_files.npy")
+    train_data = np.load(os.path.join(save_dir, f"train_data_files.npy"))
+    val_data = np.load(os.path.join(save_dir, f"val_data_files.npy"))
     print("Datasets loaded successfully!")
 except FileNotFoundError:
     print("FATAL ERROR: Files not found. Please run the data processing step first.")
     # Exit gracefully if files aren't found
     sys.exit(1)
 
-# Convert to Tensor
+# ==========================================================
+# 2. Convert to Tensor
+# ==========================================================
 # Inputs: Cols 0 to 7 (8 features: m, L, J, n_v, d, B, n, cp)
-X_train = torch.tensor(train_data[:, :8], dtype=torch.float32)
-y_train = torch.tensor(train_data[:, 8:], dtype=torch.float32)
+X_train = torch.tensor(train_data[:, :8], dtype=torch.float32)  # Training Input
+y_train = torch.tensor(train_data[:, 8:], dtype=torch.float32)  # Training output
 
-X_val = torch.tensor(val_data[:, :8], dtype=torch.float32)
-y_val = torch.tensor(val_data[:, 8:], dtype=torch.float32)
+X_val = torch.tensor(val_data[:, :8], dtype=torch.float32)  # Validation Input
+y_val = torch.tensor(val_data[:, 8:], dtype=torch.float32)  # Validation Output
 
-# 1. Separate Central Pressure (index 7) from EOS parameters (indices 0-7)
+# ==========================================================
+# 3. Separate Central Pressure (index 7) from EOS parameters (indices 0-7)
+# ==========================================================
 X_eos_train, X_cp_train = X_train[:, :7], X_train[:, 7:]
 X_eos_val, X_cp_val = X_val[:, :7], X_val[:, 7:]
 
-# 2.1 Normalize using log scaling on Central Pressure (cp)
+# ==========================================================
+# 4. Normalize the all the inputs
+# ==========================================================
+# 4.1. Normalize using log scaling on Central Pressure (cp)
 X_cp_train_norm = torch.log10(X_cp_train)
 X_cp_val_norm = torch.log10(X_cp_val)
 
-# 2.2 Normalize using Z-Score on EOS Parameters (m, L, J, n_v, d, B, n)
+# 4.2. Normalize using Z-Score on EOS Parameters (m, L, J, n_v, d, B, n)
 X_eos_mean = X_eos_train.mean(dim=0, keepdim=True)
 X_eos_std = X_eos_train.std(dim=0, keepdim=True)
 X_eos_std[X_eos_std == 0] = 1.0 
 
-# Save them:
-torch.save(X_eos_mean, "X_eos_mean.pt")
-torch.save(X_eos_std, "X_eos_std.pt")
+# 4.3. Save them:
+torch.save(X_eos_mean, os.path.join(save_dir, "X_eos_mean.pt"))
+torch.save(X_eos_std, os.path.join(save_dir, "X_eos_std.pt"))
 print("Normalization statistics saved.")
-
 X_eos_train_norm = (X_eos_train - X_eos_mean) / X_eos_std
 X_eos_val_norm = (X_eos_val - X_eos_mean) / X_eos_std
 
-# 3. --- Recombine inputs ---
+# ==========================================================
+# 4. Recombine inputs
+# ==========================================================
 X_train_norm = torch.cat((X_eos_train_norm, X_cp_train_norm), dim=1)
 X_val_norm = torch.cat((X_eos_val_norm, X_cp_val_norm), dim=1)
 
-
-# 4. Separate Mass Radius and Tidal Deformability
+# ==========================================================
+# 5. Separate Mass Radius and Tidal Deformability
+# ==========================================================
 y_mass_train, y_radius_train, y_td_train = y_train[:, 0:1], y_train[:, 1:2], y_train[:, 2:3]
 y_mass_val, y_radius_val, y_td_val = y_val[:, 0:1], y_val[:, 1:2], y_val[:, 2:3]
 
-# 5.1 Normalize using Constant Scaling on Mass (M)
+# 5.1. Normalize using Constant Scaling on Mass (M)
 MASS_SCALE = 3.5 
 y_mass_train_norm = y_mass_train / MASS_SCALE
 y_mass_val_norm = y_mass_val / MASS_SCALE
@@ -76,20 +95,25 @@ RADIUS_SCALE = 25.0
 y_radius_train_norm = y_radius_train / RADIUS_SCALE
 y_radius_val_norm = y_radius_val / RADIUS_SCALE
 
-# 5.3 Normalize using log scaling on Tidal Deformability (td)
+# 5.3. Normalize using log scaling on Tidal Deformability (td)
 y_td_train_norm = torch.log10(y_td_train)
 y_td_val_norm = torch.log10(y_td_val)
 
-# 6. --- Recombine Outputs ---
+# ==========================================================
+# 6. Recombine Outputs
+# ==========================================================
 y_train_norm = torch.cat((y_mass_train_norm, y_radius_train_norm, y_td_train_norm), dim=1)
 y_val_norm = torch.cat((y_mass_val_norm, y_radius_val_norm, y_td_val_norm), dim=1)
 
-# Note: You no longer need y_mean and y_std for normalization, 
-# but you MUST save RADIUS_SCALE to de-normalize predictions later.
 
-# ==============================================================================
-# DEFINING MODEL
-# ==============================================================================
+################################################################################
+################################################################################
+# DEFINE THE MODEL
+################################################################################
+################################################################################
+# ==========================================================
+# Single Residual Network Block
+# ==========================================================
 class ResNetBlock(nn.Module):
     def __init__(self, hidden_dim, auxiliary_dim=1):
         super().__init__()
@@ -103,6 +127,9 @@ class ResNetBlock(nn.Module):
         out = self.act(self.fc(combined))
         return x + out # Residual connection
 
+# ==========================================================
+# Set up the Residual Network Flow
+# ==========================================================
 class PhysicsEmulator(nn.Module):
     def __init__(self, input_dim=8, hidden_dim=512): 
         super().__init__()
@@ -148,7 +175,14 @@ class PhysicsEmulator(nn.Module):
 
 
 
-# --- Helper function for plotting (needs to be defined before calling) ---
+################################################################################
+################################################################################
+# TRAIN THE MODEL
+################################################################################
+################################################################################
+# ==========================================================
+# Plotting Function
+# ==========================================================
 def plot_and_save_losses(train_losses, val_losses, filename="loss_curve.png"):
     """Plots training and validation loss and saves the figure."""
     epochs = range(len(train_losses))
@@ -169,19 +203,35 @@ def plot_and_save_losses(train_losses, val_losses, filename="loss_curve.png"):
         print(f"Loss plot saved to {filename}", flush=True)
     except Exception as e:
         print(f"ERROR saving plot: {e}", flush=True)
-    plt.close() # Close the figure to free up memory
-# --------------------------------------------------------------------------
+    plt.close() 
 
+
+# ==========================================================
+# Set training parameters
+# ==========================================================
+BATCH_SIZE = 256
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 model = PhysicsEmulator().to(DEVICE)
 optimizer = optim.AdamW(model.parameters(), lr=5e-4, weight_decay=1e-5)
-scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=1000, eta_min=1e-7)
+scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
+            optimizer, T_max=1000, eta_min=1e-7
+            )   # Modulates adaptive learning rate
 criterion = nn.HuberLoss()
 
-# ==============================================================================
-# TRAINING
-# ==============================================================================
-# Ensure Mass and Radius are Torch Tensors (it might be a numpy array currently)
+EPOCHS = 500    # With early stopping
+patience = 100  # Number of epochs to wait for improvement before stopping
+patience_counter = 0
+best_val_loss = float('inf')
+
+# Lists to store losses for plotting
+train_losses = []
+val_losses = []
+
+# ==========================================================
+# Load training and validation tensors
+# ==========================================================
+# Ensure Mass and Radius are Torch Tensors
 if isinstance(y_train_norm, np.ndarray):
     y_train_norm = torch.from_numpy(y_train_norm).to(torch.float32)
 if isinstance(y_val_norm, np.ndarray):
@@ -189,50 +239,57 @@ if isinstance(y_val_norm, np.ndarray):
 
 train_loader = DataLoader(TensorDataset(X_train_norm, y_train_norm), batch_size=BATCH_SIZE, shuffle=True)
 val_loader = DataLoader(TensorDataset(X_val_norm, y_val_norm), batch_size=BATCH_SIZE, shuffle=False)
-best_loss = float('inf')
 
-# 1. ADD STORAGE LISTS
-train_losses = []
-val_losses = []
-# Ensure RADIUS_SCALE is defined globally or passed in if running as a function
-# If you didn't define save_dir, model will save in current directory.
-
+# ==========================================================
+# Training
+# ==========================================================
 for epoch in range(EPOCHS):
+    # 1. Set model in training mode
     model.train()
     train_loss = 0.0
     for X_b, y_b in train_loader:
         X_b, y_b = X_b.to(DEVICE), y_b.to(DEVICE)
-        optimizer.zero_grad()
-        pred = model(X_b)
-        loss = criterion(pred, y_b)
-        loss.backward()
-        optimizer.step()
-        train_loss += loss.item()
+        optimizer.zero_grad()       # Clear previous gradient
+        pred = model(X_b)           # Make prediction
+        loss = criterion(pred, y_b) # Calculate training loss
+        loss.backward()             # Backpropagate loss
+        optimizer.step()            # Use optimizer
+        train_loss += loss.item()   # Update training loss
     
     train_loss /= len(train_loader)
     
+    # 2. Set model in evaluation mode
     model.eval()
     val_loss = 0.0
     with torch.no_grad():
         for X_b, y_b in val_loader:
             X_b, y_b = X_b.to(DEVICE), y_b.to(DEVICE)
-            pred = model(X_b)
-            loss = criterion(pred, y_b)
-            val_loss += loss.item()
+            pred = model(X_b)           # Make prediction
+            loss = criterion(pred, y_b) # Calculate validation loss
+            val_loss += loss.item()     # Update validation loss
     
     val_loss /= len(val_loader)
-    scheduler.step()
+    scheduler.step()                    # Update Scheduler
     
-    # 2. APPEND LOSSES
+    # 2. Append Losses
     train_losses.append(train_loss)
     val_losses.append(val_loss)
 
-    if val_loss < best_loss:
-        best_loss = val_loss
-        # Removed os.path.join(save_dir, "Best_EOS_Model.pth") for simplicity, assuming current directory
-        torch.save(model.state_dict(), "Best_EOS_Model.pth")
+    # 4. Early Stopping check
+    if val_loss < best_val_loss:
+        best_val_loss = val_loss
+        patience_counter = 0
+        # Save the best model weights
+        best_model_state = model.state_dict()
+
+    else:
+        patience_counter += 1
+        if patience_counter >= patience:
+            print(f"Early stopping at epoch {epoch+1}")
+            break
     
-    if epoch % 10 == 0:
+    # 5. Calculate and print error in output parameters every 100 epochs
+    if epoch % 100 == 0:
         # Calculate the Approximate Physical Error in km
         phys_error_km = np.sqrt(2 * val_loss) * RADIUS_SCALE 
         mass_error = np.sqrt(2 * val_loss) * MASS_SCALE
@@ -240,11 +297,20 @@ for epoch in range(EPOCHS):
         
         print(f"Epoch {epoch} | Val Loss: {val_loss:.6e} | Approx Radius Error: {phys_error_km:.4f} km | Mass Error: {mass_error:.4f} Msun | TD Error: {td_error:.4f}", flush=True) 
         
-        # 3. PLOT AND SAVE PERIODICALLY
-        # Plot every 25 epochs (or choose a different interval)
-        if epoch % 25 == 0 and epoch > 0:
+        # 6. Plot and save errors
+        # Plot every 100 epochs
+        if epoch % 100 == 0 and epoch > 0:
             plot_and_save_losses(train_losses, val_losses, filename=f"loss_curve_epoch{epoch}.png")
 
-# 4. FINAL PLOT after training finishes
+# 7. Final plot after training finishes
 plot_and_save_losses(train_losses, val_losses, filename="loss_curve_final.png")
-print("Training complete. Best validation loss:", best_loss)
+
+# 8. Saving the best model to be loaded later
+torch.save(model.state_dict(), os.path.join(save_dir, "Best_EOS_Model.pth"))
+print("Training complete. Best validation loss:", best_val_loss)
+
+################################################################################
+################################################################################
+# END OF TRAINING
+################################################################################
+################################################################################

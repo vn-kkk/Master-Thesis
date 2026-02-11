@@ -103,7 +103,7 @@ The output from when Testing a model (locally) on unseen data land up here. It c
 
 
 
-
+---
 
 
 
@@ -127,6 +127,7 @@ A Residual Network trained on Tabulated Hybrid (Hadronic + Quark) input paramete
 
 Has files that will be needed when running the job on a cluster
 
+* Create\_dataset: Used to create a dataset with the required number of files. 
 * Train: Used to train a ResNet Model
 
 
@@ -156,7 +157,7 @@ Contains
 
 
 
-Contains .npy files created by the notebook locally within a folder
+Contains .npy files created by either the notebook within the folder locally or on the cluster
 
 * files\_used\_for\_training
 * train\_data\_files
