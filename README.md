@@ -1,8 +1,4 @@
-# -------------------------------
-
 # ResNet\_PP(EOS+CP)\_MRTD\_Emulator
-
-# -------------------------------
 
 
 
@@ -26,13 +22,11 @@ This is the main all in one jupyter notebook. Contains
 
 &nbsp;
 
-
+---
 
 
 
 1. Cluster
-
-----------
 
 
 
@@ -44,13 +38,13 @@ Has files that will be needed when running the job on a cluster
 
 
 
-
+---
 
 
 
 2\. Cluster\_Output
 
------------------
+
 
 Contains
 
@@ -61,25 +55,25 @@ Contains
 
 
 
-
+---
 
 
 
 3\. Datasets
 
------------
+
 
 Contains .npy files created by a cluster run within a folder
 
 
 
-
+---
 
 
 
 4\. Outputs
 
-----------
+
 
 When the training jupyter notebook is run locally the Outputs from the code are in here. They contain:
 
@@ -91,11 +85,13 @@ But mostly empty as the training is run on the cluster
 
 
 
+---
+
 
 
 5\. Testing
 
-----------
+
 
 It contains the Testing.ipynb file and the tov\_tide requirements to Test the model accuracy after training locally.
 
@@ -111,11 +107,7 @@ The output from when Testing a model (locally) on unseen data land up here. It c
 
 
 
-# ------------------------------------
-
 # ResNet\_Tabular(EOS+CP)\_MRTD\_Emulator
-
-# ------------------------------------
 
 
 
@@ -131,7 +123,7 @@ A Residual Network trained on Tabulated Hybrid (Hadronic + Quark) input paramete
 
 1. Cluster
 
-----------
+
 
 Has files that will be needed when running the job on a cluster
 
@@ -139,11 +131,13 @@ Has files that will be needed when running the job on a cluster
 
 
 
+---
+
 
 
 2\. Cluster\_Output
 
------------------
+
 
 Contains
 
@@ -154,13 +148,13 @@ Contains
 
 
 
-
+---
 
 
 
 3\. Datasets
 
------------
+
 
 Contains .npy files created by the notebook locally within a folder
 
@@ -170,13 +164,13 @@ Contains .npy files created by the notebook locally within a folder
 
 
 
-
+---
 
 
 
 4\. Outputs
 
-----------
+
 
 When the training jupyter notebook is run locally the Outputs from the code are in here. They contain:
 
@@ -188,11 +182,11 @@ But mostly empty as the training is run on the cluster
 
 
 
+---
+
 
 
 5\. Testing
-
-----------
 
 
 
