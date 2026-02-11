@@ -1,0 +1,4 @@
+.conda/
+**.Identifier
+**/*.npy
+**/*.npz
