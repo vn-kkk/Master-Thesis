@@ -195,8 +195,7 @@ The output from when Testing a model (locally) on unseen data land up here. It c
 
 * The M-R plot
 * TD-Compactness plot
-
-Model Statistics
+* Model Statistics
 
 
 

@@ -1,0 +1,17 @@
+Mass, Radius and TD prediction metrics
+======================================
+Mass Prediction Metrics:
+MAE   : 0.003471
+RMSE  : 0.004542
+R^2   : 0.999967
+
+Radius Prediction Metrics:
+MAE   : 0.031750\ nRMSE  : 0.089107
+R^2   : 0.999048
+
+Tidal Deformability Prediction Metrics:
+MAE   : 0.003103
+RMSE  : 0.004639
+R^2   : 0.999993
+
+Norm RMSE : 0.004006
