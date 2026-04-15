@@ -1,0 +1,14 @@
+Epoch 0 | Train Loss: 3.665618e-02 | Val Loss: 2.164465e-03 | Approx Radius Error: 1.6449 km | Approx Mass Error: 0.2303 | Approx TD error: 0.0658
+Epoch 100 | Train Loss: 4.036452e-05 | Val Loss: 2.292656e-04 | Approx Radius Error: 0.5353 km | Approx Mass Error: 0.0749 | Approx TD error: 0.0214
+Loss plot saved to loss_curve_epoch100.svg
+Epoch 200 | Train Loss: 2.574309e-06 | Val Loss: 3.439661e-06 | Approx Radius Error: 0.0656 km | Approx Mass Error: 0.0092 | Approx TD error: 0.0026
+Loss plot saved to loss_curve_epoch200.svg
+Epoch 300 | Train Loss: 1.556041e-05 | Val Loss: 1.958815e-05 | Approx Radius Error: 0.1565 km | Approx Mass Error: 0.0219 | Approx TD error: 0.0063
+Loss plot saved to loss_curve_epoch300.svg
+Epoch 400 | Train Loss: 6.713093e-06 | Val Loss: 2.913859e-06 | Approx Radius Error: 0.0604 km | Approx Mass Error: 0.0084 | Approx TD error: 0.0024
+Loss plot saved to loss_curve_epoch400.svg
+Epoch 500 | Train Loss: 6.524639e-06 | Val Loss: 4.180567e-06 | Approx Radius Error: 0.0723 km | Approx Mass Error: 0.0101 | Approx TD error: 0.0029
+Loss plot saved to loss_curve_epoch500.svg
+Early stopping at epoch 516
+Training finished. Best validation loss: 0.0000006381
+Loss plot saved to loss_curve_final.svg

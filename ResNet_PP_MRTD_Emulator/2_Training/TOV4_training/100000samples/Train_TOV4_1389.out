@@ -1,0 +1,29 @@
+Job ID: 1389
+Running on: hft-sascluster-135
+Starting at: Tue Apr 14 15:40:26 CEST 2026
+Starting Python training script: Train_TOV4.py
+Using device: cpu
+Normalization statistics saved.
+Epoch 0 | Train Loss: 1.695450e-02 | Val Loss: 4.166018e-04 | Approx Radius Error: 0.7216 km | Approx Mass Error: 0.1010 | Approx TD error: 0.0289
+Epoch 100 | Train Loss: 2.634685e-05 | Val Loss: 4.068650e-05 | Approx Radius Error: 0.2255 km | Approx Mass Error: 0.0316 | Approx TD error: 0.0090
+Loss plot saved to loss_curve_epoch100.png
+Epoch 200 | Train Loss: 5.111787e-06 | Val Loss: 4.884381e-06 | Approx Radius Error: 0.0781 km | Approx Mass Error: 0.0109 | Approx TD error: 0.0031
+Loss plot saved to loss_curve_epoch200.png
+Epoch 300 | Train Loss: 1.422377e-05 | Val Loss: 4.259774e-06 | Approx Radius Error: 0.0730 km | Approx Mass Error: 0.0102 | Approx TD error: 0.0029
+Loss plot saved to loss_curve_epoch300.png
+Epoch 400 | Train Loss: 2.724533e-06 | Val Loss: 2.068543e-06 | Approx Radius Error: 0.0508 km | Approx Mass Error: 0.0071 | Approx TD error: 0.0020
+Loss plot saved to loss_curve_epoch400.png
+Epoch 500 | Train Loss: 1.943747e-06 | Val Loss: 6.317988e-06 | Approx Radius Error: 0.0889 km | Approx Mass Error: 0.0124 | Approx TD error: 0.0036
+Loss plot saved to loss_curve_epoch500.png
+Epoch 600 | Train Loss: 8.363952e-07 | Val Loss: 7.142697e-07 | Approx Radius Error: 0.0299 km | Approx Mass Error: 0.0042 | Approx TD error: 0.0012
+Loss plot saved to loss_curve_epoch600.png
+Epoch 700 | Train Loss: 3.372442e-07 | Val Loss: 3.549239e-07 | Approx Radius Error: 0.0211 km | Approx Mass Error: 0.0029 | Approx TD error: 0.0008
+Loss plot saved to loss_curve_epoch700.png
+Epoch 800 | Train Loss: 7.891358e-08 | Val Loss: 1.490596e-07 | Approx Radius Error: 0.0137 km | Approx Mass Error: 0.0019 | Approx TD error: 0.0005
+Loss plot saved to loss_curve_epoch800.png
+Epoch 900 | Train Loss: 2.690987e-08 | Val Loss: 1.098647e-07 | Approx Radius Error: 0.0117 km | Approx Mass Error: 0.0016 | Approx TD error: 0.0005
+Loss plot saved to loss_curve_epoch900.png
+Training finished. Best validation loss: 0.0000001050
+Loss plot saved to loss_curve_final.png
+Training complete. Best validation loss: 1.049669431508984e-07
+Job finished at: Tue Apr 14 16:03:12 CEST 2026
