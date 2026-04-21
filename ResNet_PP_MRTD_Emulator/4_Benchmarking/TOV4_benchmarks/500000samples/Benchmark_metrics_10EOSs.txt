@@ -1,0 +1,13 @@
+Benchmark metrics for 10 EOSs
+================================
+
+==================== Final Benchmark Results ====================
+Number of EOS tested: 10
+Samples per curve:    100
+Number of trials:     10 (after 1 warm-up)
+-----------------------------------------------------------------
+Median TOV curve time: 0.483107 seconds
+Median Model curve time: 0.002800 seconds
+
+--->Speedup Factor: 182.6x ± 44.9x faster
+=================================================================

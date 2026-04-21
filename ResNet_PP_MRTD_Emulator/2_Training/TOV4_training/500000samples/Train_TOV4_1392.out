@@ -1,0 +1,18 @@
+Job ID: 1392
+Running on: hft-sascluster-135
+Starting at: Wed Apr 15 13:07:45 CEST 2026
+Starting Python training script: Train_TOV4.py
+Using device: cpu
+Normalization statistics saved.
+Epoch 0 | Train Loss: 3.795068e-03 | Val Loss: 2.178522e-04 | Approx Radius Error: 0.5218 km | Approx Mass Error: 0.0731 | Approx TD error: 0.0209
+Epoch 100 | Train Loss: 2.281241e-06 | Val Loss: 4.042773e-06 | Approx Radius Error: 0.0711 km | Approx Mass Error: 0.0100 | Approx TD error: 0.0028
+Loss plot saved to loss_curve_epoch100.png
+Epoch 200 | Train Loss: 4.100035e-06 | Val Loss: 6.392670e-07 | Approx Radius Error: 0.0283 km | Approx Mass Error: 0.0040 | Approx TD error: 0.0011
+Loss plot saved to loss_curve_epoch200.png
+Epoch 300 | Train Loss: 2.234551e-06 | Val Loss: 2.729770e-06 | Approx Radius Error: 0.0584 km | Approx Mass Error: 0.0082 | Approx TD error: 0.0023
+Loss plot saved to loss_curve_epoch300.png
+Early stopping at epoch 352
+Training finished. Best validation loss: 0.0000006019
+Loss plot saved to loss_curve_final.png
+Training complete. Best validation loss: 6.018590183036595e-07
+Job finished at: Wed Apr 15 13:44:42 CEST 2026
